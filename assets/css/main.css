@@ -1,0 +1,107 @@
+#Container{
+	font-family: 'Lato', sans-serif;
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+}
+#Header{
+	width:100%;
+	margin-top: 40px;
+}
+#Logo{
+	font-family: 'Roboto Slab', serif;
+	font-weight: 100;
+	float: left;
+	margin-right: 20px;
+	font-size: 30px;
+    margin-top: -9px;
+}
+#SearchBox{
+height: 25px;
+margin-top: 2px;
+width: 100%;
+
+}/*
+#SearchButton{
+	height:25px;
+}
+#SearchContainer{
+
+}
+*/
+#Main{
+	height: 700px;
+	border: 1px solid black;
+	overflow:hidden;
+}
+.search-input{
+	width: 50%;
+}
+#SearchIcon{
+	position: relative;
+	right: -480px;
+    top: -21px;
+    cursor: pointer; 
+}
+.carouselWrap{
+	margin: 10px	;
+}
+.submitWrap{
+	float:right;
+	margin: 20px 30px;
+}
+ #festival-map { 
+	  	  height: 41%;
+		  width: 100%; 
+		  margin-left: auto;
+          margin-right: auto;
+          margin-top: 50px;
+		  border-right-width: 2px;
+		  border-right-color: #ffffff;
+		  border-right-style: solid;
+		  border-left-width: 2px;
+		  border-left-color: #ffffff;
+		  border-left-style: solid;
+	  }
+
+/*.carousel{
+	height: 15%;
+	width: 80%;
+	border: solid 1px red;
+	overflow: hidden;
+	margin: 10px;
+
+}*/
+./*carouselItem{
+	/*width: 30%;*/
+	/*border: solid 1px black;
+	float: left;
+	clear: none;
+	padding: 10%;
+
+}*/
+./*a{
+	background: url(../img/1.jpg);
+	background-clip: border-box;
+	
+}
+.s{
+background: url(../img/2.jpg);
+	background-size: cover;
+	background-clip: border-box;
+}
+.z{
+background: url(../img/3.jpg);
+	background-size: cover;
+	background-clip: border-box;
+}
+.q{
+background: url(../img/4.jpg);
+	background-size: cover;
+	background-clip: border-box;
+}
+.r{
+background: url(../img/2.jpg);
+	background-size: cover;
+	background-clip: border-box;
+}*/
