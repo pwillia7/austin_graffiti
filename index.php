@@ -111,6 +111,7 @@
 			});
 	</script>
 	<script type="text/javascript">
+			var ib = new InfoBox();
 
 //Create the variables that will be used within the map configuration options.
 //The latitude and longitude of the center of the map.
@@ -159,13 +160,8 @@ loadMapMarkers();
 //Function that loads the map markers.
 function loadMapMarkers (){
 
-
-		
-
-
-	 
-		for(var i = 0; i < Object.keys(postData).length; i++){
-			var post = postData[Object.keys(postData)[i]];
+	function createMapMarker(post){
+		var post = postData[Object.keys(postData)[i]];
 			var markerShape = {
 			 	coord: [12,4,216,22,212,74,157,70,184,111,125,67,6,56],
 				type: 'poly'
@@ -192,14 +188,15 @@ function loadMapMarkers (){
 			 //assigns the icon shape set above to the marker.
 			 shape: markerShape,
 			 //sets the z-index of the map marker.
-			 zIndex:107
+			 zIndex:107,
+			 //markers html content
+			 content: '<span class="pop_up_box_text"><img src="'+ post.ImageUrl +'" width="200" height="105" border="0" /><div class="mapInfoContainer">Author: '+ post.Author +'<br>'+ post.Description +'</div></span>'
 			});
-			var postImageUrl = post.ImageUrl;
 			var pop_up_info = "border: 0px solid black; background-color: #ffffff; padding:15px; margin-top: 8px; border-radius:10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; box-shadow: 1px 1px #888;";
 
 			var boxText = document.createElement("div");
 			boxText.style.cssText = pop_up_info;
-			boxText.innerHTML = '<span class="pop_up_box_text"><img src="'+ postImageUrl +'" width="200" height="105" border="0" /><div class="mapInfoContainer">This is a really great piece of art look at it!</div></span>';
+			boxText.innerHTML = marker.content;
 
 			var infoboxOptions = {
 			 content: boxText
@@ -219,13 +216,14 @@ function loadMapMarkers (){
 			 ,pane: "floatPane"
 			 ,enableEventPropagation: false
 			};
-
-			var ib = new InfoBox(infoboxOptions);
 			google.maps.event.addListener(marker, "click", function (e) {
+				ib.close();
+
+				ib.setOptions(infoboxOptions);
 			 //Open the Glastonbury info box.
 			 ib.open(festivalMap, this);
 			 //Changes the z-index property of the marker to make the marker appear on top of other markers.
-			 this.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+		//	 this.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
 			 //Zooms the map.
 			 setZoomWhenMarkerClicked();
 			 //Sets the Glastonbury marker to be the center of the map.
@@ -233,10 +231,18 @@ function loadMapMarkers (){
 			});
 
 		}
-
-
-
+		for(var i = 0; i < Object.keys(postData).length; i++){
+			var ab = postData[Object.keys(postData)[i]];
+			createMapMarker(ab);
+			
 }
+
+
+	}
+		
+
+
+	 
 
 // Setting the position of the Glastonbury map marker.
 // var markerPositionGlastonbury = new google.maps.LatLng(30.258463, -97.750815);
