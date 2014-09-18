@@ -30,7 +30,7 @@ width: 100%;
 }
 */
 #Main{
-	height: 700px;
+	height: 950px;
 	border: 1px solid black;
 	overflow:hidden;
 }
@@ -51,7 +51,7 @@ width: 100%;
 	margin: 20px 30px;
 }
  #festival-map { 
-	  	  height: 41%;
+	  	  height: 55%;
 		  width: 100%; 
 		  margin-left: auto;
           margin-right: auto;
