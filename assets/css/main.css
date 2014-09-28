@@ -38,18 +38,31 @@ width: 100%;
 	width: 50%;
 }
 #SearchIcon{
-	position: relative;
-	right: -480px;
+	float: right;
     top: -21px;
     cursor: pointer; 
+	margin-right: 10px;
 }
 .carouselWrap{
-	margin: 10px	;
+	margin: 10px;
 }
 .submitWrap{
 	float:right;
 	margin: 20px 30px;
 }
+.submitB{
+	
+	 padding: 5px 10px;
+	 text-decoration: none;
+	 border: solid 1px black;
+	 color: black;
+	}
+	.submitB:hover{
+	color: black;
+	 padding: 5px 10px;
+	 text-decoration: none;
+	 
+	}
  #festival-map { 
 	  	  height: 55%;
 		  width: 100%; 
@@ -63,45 +76,60 @@ width: 100%;
 		  border-left-color: #ffffff;
 		  border-left-style: solid;
 	  }
-
-/*.carousel{
-	height: 15%;
-	width: 80%;
-	border: solid 1px red;
-	overflow: hidden;
-	margin: 10px;
-
-}*/
-./*carouselItem{
-	/*width: 30%;*/
-	/*border: solid 1px black;
+.submitTagLine{
+	text-align: center;
+	margin-top: 70px;
+}
+.formWrap{
+margin-top: 50px;
+width: 50%;
+margin: 0 auto;
+text-align: center;
+}
+#Image{
+	margin-left: 30%;
+}
+#ibContentContainer h3{
+	margin: -2px 0px 6px 10%; 
+	text-align: center;
+}
+#ibContentContainer .mainContentImg{
+	width:85%;
+	height:85%;
+	border:0;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#ibContentContainer .mapInfoContainer {
+	font-size: 1.6em;
+	/*text-align: center;*/
+	margin: 4px;
+	min-height: 55px;
+}
+.mapInfoContainer .mapInfoContainerLinks {
+	font-size: .8em;
 	float: left;
-	clear: none;
-	padding: 10%;
-
-}*/
-./*a{
-	background: url(../img/1.jpg);
-	background-clip: border-box;
-	
+	clear: left;
+	width: 20%;
+	text-align: left;
 }
-.s{
-background: url(../img/2.jpg);
-	background-size: cover;
-	background-clip: border-box;
+.mapInfoContainer .postDetails {
+	float: left;
+	width: 67%;
+	text-align: center;
+	}
+.mapInfoContainer .postVotingContainer {
+	float: left;
+	width: 13%;
+	text-align: center;
+	}
+.mapInfoContainer .inappropriateFlag{
+	font-size: 1em;
+} 
+.postDetails span{
+	float: left;
+	clear:both;
+	width: 100%;
+	margin: 0 auto;
 }
-.z{
-background: url(../img/3.jpg);
-	background-size: cover;
-	background-clip: border-box;
-}
-.q{
-background: url(../img/4.jpg);
-	background-size: cover;
-	background-clip: border-box;
-}
-.r{
-background: url(../img/2.jpg);
-	background-size: cover;
-	background-clip: border-box;
-}*/

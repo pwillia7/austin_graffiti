@@ -7,7 +7,7 @@
     <title>austin-graffiti</title>
 	
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Lato:100,300|Roboto+Slab:100' rel='stylesheet' type='text/css'>
 	<!-- Main CSS -->
@@ -26,13 +26,15 @@
   </head>
   <body>
 
-  <?php
+
+
+<!--   <?php
 
   $m = new MongoClient();
   $db = $m->graffiti;
   $collection = $db->posts;
-  $cursor = $collection->find();
-  ?>
+  $cursor = $collection->find()->sort(array('timeStamp' => -1));
+  ?> -->
 
 	<div id="Container">
 		<div id="Header">
@@ -47,10 +49,10 @@
 			
 		 		</div>
 			</form>
-		</div>
+		</div> 
 		<div id="Main">
-			<div class="submitWrap"><button class="submitB">Submit New Graffiti</button></div>
-			<div class="carouselWrap">
+			<div class="submitWrap"><a href='submit.php' class="submitB">Submit New Graffiti</a></div>
+			<div id="carouselNewWrap" class="carouselWrap">
 				<h3>What's New</h3>
 				<?php
 				$wrapTemplate = '<ul class="carousel carouselNew">';
@@ -60,30 +62,25 @@
 				echo $wrapTemplate;
 				foreach ($cursor as $document) {
 					echo $itemTemplate;
-    				echo $document["ImageUrl"] . "\n";
+    				echo $document["thumbUrl"] . "\n";
     				echo $itemTemplateEnd;
     			}
     			echo $wrapTemplateEnd;
 				?>
-				<!-- <ul class="carousel carouselNew">
-					<li><img src="http://placehold.it/350x150&text=FooBar3" alt=""></li>
-					<li><img src="http://placehold.it/350x150&text=FooBar4" alt=""></li>
-					<li><img src="http://placehold.it/350x150&text=FooBar2" alt=""></li>
-					<li><img src="http://placehold.it/350x150&text=FooBar1" alt=""></li>
-				</ul> -->
 			</div>
 
 			<div class="carouselWrap">
 				<h3>Most Popular</h3>
 				<?php
-				$wrapTemplate = '<ul class="carousel carouselNew">';
+				$cursor2 = $collection->find()->sort(array('numPVotes' => -1));
+				$wrapTemplate = '<ul class="carousel carouselPopular">';
 				$wrapTemplateEnd = '</ul>';
 				$itemTemplate = '<li><img src="';
 				$itemTemplateEnd = '" alt=""></li>';
 				echo $wrapTemplate;
-				foreach ($cursor as $document) {
+				foreach ($cursor2 as $document) {
 					echo $itemTemplate;
-    				echo $document["ImageUrl"] . "\n";
+    				echo $document["thumbUrl"] . "\n";
     				echo $itemTemplateEnd;
     			}
     			echo $wrapTemplateEnd;
@@ -103,15 +100,18 @@
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZAMhT8iWr710uQm37YfPgezScJ214xu8&sensor=true"></script>
 	<script src="/assets/js/infobox.js" type="text/javascript"></script>
 	<script>
+
+	
+	
 	var postData;
 		$.getJSON('assets/scripts/query.php',function(data){
 				postData = data;
 
-				// postData = $.makeArray(postData);
+				
 			});
 	</script>
 	<script type="text/javascript">
-			var ib = new InfoBox();
+var ib = new InfoBox();
 
 //Create the variables that will be used within the map configuration options.
 //The latitude and longitude of the center of the map.
@@ -120,7 +120,7 @@ var festivalMapCenter = new google.maps.LatLng(30.2500, -97.7500);
 var festivalMapZoom = 12;
 //The max and min zoom levels that are allowed.
 var festivalMapZoomMax = 20;
-var festivalMapZoomMin = 10;
+var festivalMapZoomMin = 2;
 
 //These options configure the setup of the map. 
 var festivalMapOptions = { 
@@ -132,7 +132,7 @@ var festivalMapOptions = {
 		  minZoom:festivalMapZoomMin,
 		  //Turn off the map controls as we will be adding our own later.
 		  panControl: false,
-		  mapTypeControl: true,
+		  mapTypeControl: true
 };
 
 //Create the variable for the main map itself.
@@ -145,6 +145,7 @@ google.maps.event.addDomListener(window, 'load', loadFestivalMap);
 
 //THE MAIN FUNCTION THAT IS CALLED WHEN THE WEB PAGE LOADS --------------------------------------------------------------------------------
 function loadFestivalMap() {
+
 	
 //The empty map variable ('festivalMap') was created above. The line below creates the map, assigning it to this variable. The line below also loads the map into the div with the id 'festival-map' (see code within the 'body' tags below), and applies the 'festivalMapOptions' (above) to configure this map. 
 festivalMap = new google.maps.Map(document.getElementById("festival-map"), festivalMapOptions);	
@@ -168,21 +169,23 @@ function loadMapMarkers (){
 			};
 
 			var markerIcon = {
-			 url: post.ImageUrl,
+			 url: post.thumbUrl,
 			 scaledSize: new google.maps.Size(100, 50),
 			 origin: new google.maps.Point(0, 0),
 			 anchor: new google.maps.Point(0, 0)
 			};
 
 			var xcoord = post.Coord.substr(0,post.Coord.indexOf(','));
-			var ycoord = post.Coord.substr(post.Coord.indexOf(',')+2);
+			var ycoord = post.Coord.substr(post.Coord.indexOf(',')+1);
 			var markerPosition = new google.maps.LatLng(xcoord, ycoord);
+			var postStatus = post.current === true ?('active<br><span>taken down?</span>'):('inactive');
+		
 			var marker = new google.maps.Marker({
 			 //uses the position set above.
 			 position: markerPosition,
 			 //adds the marker to the map.
 			 map: festivalMap,
-			 title: post.Name,
+			 title: post.name,
 			 //assigns the icon image set above to the marker.
 			 icon: markerIcon,
 			 //assigns the icon shape set above to the marker.
@@ -190,8 +193,24 @@ function loadMapMarkers (){
 			 //sets the z-index of the map marker.
 			 zIndex:107,
 			 //markers html content
-			 content: '<span class="pop_up_box_text"><img src="'+ post.ImageUrl +'" width="200" height="105" border="0" /><div class="mapInfoContainer">Author: '+ post.Author +'<br>'+ post.Description +'</div></span>'
+			 content: '<span id="ibContentContainer" class="pop_up_box_text">' + 
+			 			'<h3>'+ post.name +'</h3> ' +
+			 			'<img class="mainContentImg" src="'+ post.imageUrl +'" />' +
+			 			'<div class="mapInfoContainer">' +
+			 			'<div class="mapInfoContainerLinks">' +
+			 				'<div class="postStatus">Status: ' + postStatus +
+			 				'</div>' +
+			 				'<div class="inappropriateFlag"><span>report image</span></div></div>' +
+			 				'<div class="postDetails">' +
+			 					'<span class="postArtist">Artist: '+ post.artist +'</span>' +
+			 					'<span class="postDescription">'+ post.description +'</span></div>' +
+			 				'<div class="postVotingContainer">' +
+			 				'<button type="button" class="btn btn-default btn-s">' +
+			 					'<span class="glyphicon glyphicon-arrow-up"></span></button>' +
+			 				'<button type="button" class="btn btn-default btn-s">' +
+			 					'<span class="glyphicon glyphicon-arrow-down"></span></button></div></span>'
 			});
+
 			var pop_up_info = "border: 0px solid black; background-color: #ffffff; padding:15px; margin-top: 8px; border-radius:10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; box-shadow: 1px 1px #888;";
 
 			var boxText = document.createElement("div");
@@ -207,9 +226,11 @@ function loadMapMarkers (){
 			 ,boxStyle: {
 			 	background: "url('infobox/pop_up_box_top_arrow.png') no-repeat"
 			 	,opacity: 1
-			 	,width: "430px"
+			 	,width: "60%"
+			 	,margin: "-20px 0px 0px 0px"
+
 			 	}
-			 ,closeBoxMargin: "10px 2px 2px 2px"
+			 ,closeBoxMargin: "-6px -10px 0px 2px"
 			 ,closeBoxURL: "assets/img/remove-icon.png"
 			 ,infoBoxClearance: new google.maps.Size(1, 1)
 			 ,isHidden: false
@@ -229,11 +250,32 @@ function loadMapMarkers (){
 			 //Sets the Glastonbury marker to be the center of the map.
 			 festivalMap.setCenter(marker.getPosition());
 			});
+			var thumbs = $('.carousel').find('img[src*="'+post.thumbUrl+'"]');
+			for(var j = 0; j < thumbs.length; j++){
+				var thumb = thumbs[j].parentNode;
+				google.maps.event.addDomListener(thumb, "click", function (e) {
+				ib.close();
+
+				ib.setOptions(infoboxOptions);
+			 //Open the Glastonbury info box.
+			 ib.open(festivalMap, marker);
+			 //Changes the z-index property of the marker to make the marker appear on top of other markers.
+		//	 this.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+			 //Zooms the map.
+			 setZoomWhenMarkerClicked();
+			 //Sets the Glastonbury marker to be the center of the map.
+			 festivalMap.setCenter(marker.getPosition());
+			});
+
+			}
+
+			
 
 		}
 		for(var i = 0; i < Object.keys(postData).length; i++){
 			var ab = postData[Object.keys(postData)[i]];
 			createMapMarker(ab);
+
 			
 }
 
@@ -244,84 +286,6 @@ function loadMapMarkers (){
 
 	 
 
-// Setting the position of the Glastonbury map marker.
-// var markerPositionGlastonbury = new google.maps.LatLng(30.258463, -97.750815);
-
-
-
-// //Setting the icon to be used with the Glastonbury map marker.
-// var markerIconGlastonbury = {
-//  url: 'assets/img/1.jpg',
-//  //The size image file.
-//  scaledSize: new google.maps.Size(100, 50),
-//  //The point on the image to measure the anchor from. 0, 0 is the top left.
-//  origin: new google.maps.Point(0, 0),
-//  //The x y coordinates of the anchor point on the marker. e.g. If your map marker was a drawing pin then the anchor would be the tip of the pin.
-//  anchor: new google.maps.Point(0, 0)
-// };
- 
-// //Setting the shape to be used with the Glastonbury map marker.
-// var markerShape = {
-//  coord: [12,4,216,22,212,74,157,70,184,111,125,67,6,56],
-//  type: 'poly'
-// };
- 
-// //Creating the Glastonbury map marker.
-// markerGlastonbury = new google.maps.Marker({
-//  //uses the position set above.
-//  position: markerPositionGlastonbury,
-//  //adds the marker to the map.
-//  map: festivalMap,
-//  title: 'test1',
-//  //assigns the icon image set above to the marker.
-//  icon: markerIconGlastonbury,
-//  //assigns the icon shape set above to the marker.
-//  shape: markerShape,
-//  //sets the z-index of the map marker.
-//  zIndex:107
-// });
-//Variable containing the style for the pop-up infobox.
-// var pop_up_info = "border: 0px solid black; background-color: #ffffff; padding:15px; margin-top: 8px; border-radius:10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; box-shadow: 1px 1px #888;";
-
-// //Creates the information to go in the pop-up info box.
-// var boxTextGlastonbury = document.createElement("div");
-// boxTextGlastonbury.style.cssText = pop_up_info;
-// boxTextGlastonbury.innerHTML = '<span class="pop_up_box_text"><img src="assets/img/1.jpg" width="200" height="105" border="0" /><div class="mapInfoContainer">This is a really great piece of art look at it!</div></span>';
- 
-// //Sets up the configuration options of the pop-up info box.
-// var infoboxOptions = {
-//  content: boxTextGlastonbury
-//  ,disableAutoPan: false
-//  ,maxWidth: 0
-//  ,pixelOffset: new google.maps.Size(-200, -100)
-//  ,zIndex: null
-//  ,boxStyle: {
-//  background: "url('infobox/pop_up_box_top_arrow.png') no-repeat"
-//  ,opacity: 1
-//  ,width: "430px"
-//  }
-//  ,closeBoxMargin: "10px 2px 2px 2px"
-//  ,closeBoxURL: "assets/img/remove-icon.png"
-//  ,infoBoxClearance: new google.maps.Size(1, 1)
-//  ,isHidden: false
-//  ,pane: "floatPane"
-//  ,enableEventPropagation: false
-// };
- 
-// //Creates the pop-up infobox for Glastonbury, adding the configuration options set above.
-// infoboxGlastonbury = new InfoBox(infoboxOptions);
- 
-// //Add an 'event listener' to the Glastonbury map marker to listen out for when it is clicked.
-// google.maps.event.addListener(markerGlastonbury, "click", function (e) {
-//  //Open the Glastonbury info box.
-//  infoboxGlastonbury.open(festivalMap, this);
-//  //Changes the z-index property of the marker to make the marker appear on top of other markers.
-//  this.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-//  //Zooms the map.
-//  setZoomWhenMarkerClicked();
-//  //Sets the Glastonbury marker to be the center of the map.
-//  festivalMap.setCenter(markerGlastonbury.getPosition());
-// });
 function setZoomWhenMarkerClicked(){
 var currentZoom = festivalMap.getZoom();
  if (currentZoom < 12){
