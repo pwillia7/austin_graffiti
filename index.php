@@ -84,6 +84,7 @@
     				echo $itemTemplateEnd;
     			}
     			echo $wrapTemplateEnd;
+    			$allResults = array_merge($cursor,$cursor2);
 				?>
 			</div>
 			<div id="festival-map"></div>
@@ -102,13 +103,16 @@
 	<script>
 
 	
-	
-	var postData;
-		$.getJSON('assets/scripts/query.php',function(data){
-				postData = data;
+	var postData2 = <?php echo json_encode(iterator_to_array($cursor2));?>
 
-				
-			});
+	var postData = <?php echo json_encode(iterator_to_array($cursor));?>
+
+	function merge(a, b) {
+	    for(var idx in b) {
+	        a[idx] = b[idx];
+	    } //done!
+	}	
+	merge(postData,postData2);
 	</script>
 	<script type="text/javascript">
 var ib = new InfoBox();
@@ -205,9 +209,10 @@ function loadMapMarkers (){
 			 					'<span class="postArtist">Artist: '+ post.artist +'</span>' +
 			 					'<span class="postDescription">'+ post.description +'</span></div>' +
 			 				'<div class="postVotingContainer">' +
-			 				'<button type="button" class="btn btn-default btn-s">' +
+			 				'<span style="display: none;">' + post._id.$id + '</span>' +
+			 				'<button id="pVoteButton" type="button" class="btn btn-default btn-s">' +
 			 					'<span class="glyphicon glyphicon-arrow-up"></span></button>' +
-			 				'<button type="button" class="btn btn-default btn-s">' +
+			 				'<button id="nVoteButton" type="button" class="btn btn-default btn-s">' +
 			 					'<span class="glyphicon glyphicon-arrow-down"></span></button></div></span>'
 			});
 
@@ -237,23 +242,71 @@ function loadMapMarkers (){
 			 ,pane: "floatPane"
 			 ,enableEventPropagation: false
 			};
+			// click listener for markers
 			google.maps.event.addListener(marker, "click", function (e) {
+				festivalMap.set('scrollwheel',false);
 				ib.close();
 
 				ib.setOptions(infoboxOptions);
-			 //Open the Glastonbury info box.
-			 ib.open(festivalMap, this);
-			 //Changes the z-index property of the marker to make the marker appear on top of other markers.
-		//	 this.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-			 //Zooms the map.
-			 setZoomWhenMarkerClicked();
-			 //Sets the Glastonbury marker to be the center of the map.
-			 festivalMap.setCenter(marker.getPosition());
+				 //Open the Glastonbury info box.
+				 ib.open(festivalMap, this);
+				 //Changes the z-index property of the marker to make the marker appear on top of other markers.
+				 //this.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+				 //Zooms the map.
+				 setZoomWhenMarkerClicked();
+				 //Sets the Glastonbury marker to be the center of the map.
+				 festivalMap.setCenter(marker.getPosition());
+			
+				 ib.addListener("domready", function() {
+				 	google.maps.event.addDomListener(document.getElementById('pVoteButton'),"click",function(e){
+				 		var id = post._id.$id;
+						var xhr = new XMLHttpRequest()	
+						var formData = new FormData();
+					   	formData.append('postid',id);
+					   	xhr.open('POST', '../../pvote.php', true);
+					   	xhr.onload = function () {
+					      if (xhr.status === 200) {
+					      	//do vote recieved
+					      } else {
+					        alert('An error occurred!');
+					      }
+					      // Send the Data.
+					    };
+					    xhr.send(formData);
+					});
+					google.maps.event.addDomListener(document.getElementById('nVoteButton'),"click",function(e){
+						console.log('voting');
+				 		var id = post._id.$id;
+						var xhr = new XMLHttpRequest()	
+						var formData = new FormData();
+					   	formData.append('postid',id);
+					   	xhr.open('POST', '../../nvote.php', true);
+					   	xhr.onload = function () {
+					      if (xhr.status === 200) {
+
+					      	//do vote recieved
+					      } else {
+					        alert('An error occurred!');
+					      }
+					      // Send the Data.
+					    };
+					   
+					});
+					
+				 });
+					 
+				 
+			
 			});
+			google.maps.event.addListener(ib,'closeclick',function(){
+			   festivalMap.set('scrollwheel',true);
+			});
+			//click listener for carousels
 			var thumbs = $('.carousel').find('img[src*="'+post.thumbUrl+'"]');
 			for(var j = 0; j < thumbs.length; j++){
 				var thumb = thumbs[j].parentNode;
 				google.maps.event.addDomListener(thumb, "click", function (e) {
+				festivalMap.set('scrollwheel',false);
 				ib.close();
 
 				ib.setOptions(infoboxOptions);
@@ -265,10 +318,45 @@ function loadMapMarkers (){
 			 setZoomWhenMarkerClicked();
 			 //Sets the Glastonbury marker to be the center of the map.
 			 festivalMap.setCenter(marker.getPosition());
+
+			 ib.addListener("domready", function() {
+			 	google.maps.event.addDomListener(document.getElementById('pVoteButton'),"click",function(e){
+			 		var id = post._id.$id;
+					var xhr = new XMLHttpRequest()	
+					var formData = new FormData();
+				   	formData.append('postid',id);
+				   	xhr.open('POST', '../../pvote.php', true);
+				   	xhr.onload = function () {
+				      if (xhr.status === 200) {
+				        // File(s) uploaded.
+				        console.log('vote received!')
+				      } else {
+				        alert('An error occurred!');
+				      }
+				      // Send the Data.
+				    };
+				    xhr.send(formData);
+				});
+				google.maps.event.addDomListener(document.getElementById('nVoteButton'),"click",function(e){
+			 		var id = post._id.$id;
+					var xhr = new XMLHttpRequest()	
+					var formData = new FormData();
+				   	formData.append('postid',id);
+				   	xhr.open('POST', '../../nvote.php', true);
+				   	xhr.onload = function () {
+				      if (xhr.status === 200) {
+				      	//do vote recieved
+				      } else {
+				        alert('An error occurred!');
+				      }
+				      // Send the Data.
+				    };
+				    xhr.send(formData);
+				});
+			 });
 			});
 
 			}
-
 			
 
 		}
@@ -280,7 +368,7 @@ function loadMapMarkers (){
 }
 
 
-	}
+}
 		
 
 
@@ -292,6 +380,7 @@ var currentZoom = festivalMap.getZoom();
  festivalMap.setZoom(12);
  }
 }
+
 
 
 

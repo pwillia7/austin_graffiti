@@ -31,6 +31,13 @@ function gps2Num($coordPart) {
 		
 		//If image uploaded OK, continue process
 	if ($_FILES["Image"]["error"] == UPLOAD_ERR_OK) {
+    //Test if there is GPS Data
+    $image = $_FILES["Image"];
+    $exif = exif_read_data($image["tmp_name"]);
+    // $GPSTest = getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);
+    // if(!isset($GPSTest)) {
+    //   echo "No Geo Data Found."
+    // }
 		//Connect to DB
 		$m = new MongoClient();
   		$db = $m->graffiti;
@@ -66,10 +73,10 @@ function gps2Num($coordPart) {
    		} else{
    			$exists = false;
    		}
-   		$image = $_FILES["Image"];
+   		
 
    		// Get Lat/Lng from Image's EXIF Data
-   		$exif = exif_read_data($image["tmp_name"]);
+   	
 		$lon = getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);
 		$lonStr = "$lon";
 		$lat = getGps($exif["GPSLatitude"], $exif['GPSLatitudeRef']);
