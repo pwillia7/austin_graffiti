@@ -68,7 +68,6 @@ width: 100%;
 		  width: 100%; 
 		  margin-left: auto;
           margin-right: auto;
-          margin-top: 50px;
 		  border-right-width: 2px;
 		  border-right-color: #ffffff;
 		  border-right-style: solid;
@@ -134,5 +133,22 @@ text-align: center;
 	margin: 0 auto;
 }
 .carousel li{
+	cursor: pointer;
+}
+#submitResponse{
+	text-align: center;
+	font-size: 1.2em;
+}
+#mapControls{
+	width: 100%;
+	height: 50px;
+	border: 1px solid black;
+	border-left: none;
+	border-right: none;
+}
+#takenDown{
+	cursor: pointer;
+}
+#inappropriateFlag{
 	cursor: pointer;
 }

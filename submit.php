@@ -42,7 +42,7 @@
 			</form>
 		</div>
 		<div style='height: 650px;' id="Main">
-		<div id="submitResponse" style="display: none;" class="alert alert-success" role="alert"></div>
+		<div id="submitResponse"></div>
 			<h1 class='submitTagLine'> submit a new tag </h1>
 
 			<div class="formWrap">
@@ -125,12 +125,14 @@
       if (xhr.status === 200) {
         // File(s) uploaded.
         uploadButton.innerHTML = 'Upload';
+        document.getElementById('submitResponse').innerHTML = xhr.response;
       } else {
         alert('An error occurred!');
       }
       // Send the Data.
     };
     xhr.send(formData);
+    
     }
 </script>
 

@@ -84,9 +84,10 @@
     				echo $itemTemplateEnd;
     			}
     			echo $wrapTemplateEnd;
-    			$allResults = array_merge($cursor,$cursor2);
+    			
 				?>
 			</div>
+			<div id="mapControls"></div>
 			<div id="festival-map"></div>
 		</div>
 	</div>
@@ -182,7 +183,7 @@ function loadMapMarkers (){
 			var xcoord = post.Coord.substr(0,post.Coord.indexOf(','));
 			var ycoord = post.Coord.substr(post.Coord.indexOf(',')+1);
 			var markerPosition = new google.maps.LatLng(xcoord, ycoord);
-			var postStatus = post.current === true ?('active<br><span>taken down?</span>'):('inactive');
+			var postStatus = post.current === true ?('active<br><span id="takenDown">taken down?</span>'):('inactive');
 		
 			var marker = new google.maps.Marker({
 			 //uses the position set above.
@@ -204,7 +205,7 @@ function loadMapMarkers (){
 			 			'<div class="mapInfoContainerLinks">' +
 			 				'<div class="postStatus">Status: ' + postStatus +
 			 				'</div>' +
-			 				'<div class="inappropriateFlag"><span>report image</span></div></div>' +
+			 				'<div id="inappropriateFlag"><span>report image</span></div></div>' +
 			 				'<div class="postDetails">' +
 			 					'<span class="postArtist">Artist: '+ post.artist +'</span>' +
 			 					'<span class="postDescription">'+ post.description +'</span></div>' +
@@ -221,7 +222,7 @@ function loadMapMarkers (){
 			var boxText = document.createElement("div");
 			boxText.style.cssText = pop_up_info;
 			boxText.innerHTML = marker.content;
-
+			
 			var infoboxOptions = {
 			 content: boxText
 			 ,disableAutoPan: false
@@ -242,6 +243,8 @@ function loadMapMarkers (){
 			 ,pane: "floatPane"
 			 ,enableEventPropagation: false
 			};
+
+
 			// click listener for markers
 			google.maps.event.addListener(marker, "click", function (e) {
 				festivalMap.set('scrollwheel',false);
@@ -258,6 +261,41 @@ function loadMapMarkers (){
 				 festivalMap.setCenter(marker.getPosition());
 			
 				 ib.addListener("domready", function() {
+
+				 	google.maps.event.addDomListener(document.getElementById('takenDown'),"click",function(e){
+			 		var id = post._id.$id;
+					var xhr = new XMLHttpRequest()	
+					var formData = new FormData();
+				   	formData.append('postid',id);
+				   	xhr.open('POST', '../../takedownvote.php', true);
+				   	xhr.onload = function () {
+				      if (xhr.status === 200) {
+				      	//do vote recieved
+				      } else {
+				        alert('An error occurred!');
+				      }
+				      // Send the Data.
+				    };
+				    xhr.send(formData);
+					});
+
+					google.maps.event.addDomListener(document.getElementById('inappropriateFlag'),"click",function(e){
+			 		var id = post._id.$id;
+					var xhr = new XMLHttpRequest()	
+					var formData = new FormData();
+				   	formData.append('postid',id);
+				   	xhr.open('POST', '../../inappvote.php', true);
+				   	xhr.onload = function () {
+				      if (xhr.status === 200) {
+				      	//do vote recieved
+				      } else {
+				        alert('An error occurred!');
+				      }
+				      // Send the Data.
+				    };
+				    xhr.send(formData);
+					});
+
 				 	google.maps.event.addDomListener(document.getElementById('pVoteButton'),"click",function(e){
 				 		var id = post._id.$id;
 						var xhr = new XMLHttpRequest()	
