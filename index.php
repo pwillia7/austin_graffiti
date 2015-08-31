@@ -126,10 +126,6 @@ var festivalMapZoom = 12;
 //The max and min zoom levels that are allowed.
 var festivalMapZoomMax = 20;
 var festivalMapZoomMin = 2;
-//The boundaries of Austin
-var southWest = new google.maps.LatLng(30.219990, -97.836645);
-var northEast = new google.maps.LatLng(30.412929, -97.637861);
-var bounds = new google.maps.LatLngBounds(southWest,northEast);
 
 //These options configure the setup of the map. 
 var festivalMapOptions = { 
@@ -159,18 +155,6 @@ function loadFestivalMap() {
 //The empty map variable ('festivalMap') was created above. The line below creates the map, assigning it to this variable. The line below also loads the map into the div with the id 'festival-map' (see code within the 'body' tags below), and applies the 'festivalMapOptions' (above) to configure this map. 
 festivalMap = new google.maps.Map(document.getElementById("festival-map"), festivalMapOptions);	
 
-//Limits map to the Austin area
-var lastValidCenter = festivalMap.getCenter();
-google.maps.event.addListener(festivalMap, 'center_changed', function() {
-    if (bounds.contains(festivalMap.getCenter())) {
-        // still within valid bounds, so save the last valid position
-        lastValidCenter = festivalMap.getCenter();
-        return; 
-    }
-
-    // not valid anymore => return to last valid position
-    festivalMap.panTo(lastValidCenter);
-});
 
 //Calls the function below to load up all the map markers.
 loadMapMarkers();
