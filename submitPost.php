@@ -84,7 +84,7 @@ function SubmitMain(){
   		//Create Thumbnail image and scale image
   		$tmp_name = $_FILES["Image"]["tmp_name"];
   		$fname = $_FILES["Image"]["name"];
-  		$tagsDir = '/Users/patrick.williams/Documents/projects/austin-graffiti/tags/';
+  		$tagsDir = 'tags/';
   		$newFName = $imageKeyStr . $fname;
   			//Run ImageMagick to create thumbnail
   		exec('convert ' . $tmp_name . ' -resize 200X108^ -gravity center -extent 200X108 ' . $tagsDir . 'thumb_' . $newFName);
