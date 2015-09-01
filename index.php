@@ -51,6 +51,10 @@
 			</form>
 		</div> 
 		<div id="Main">
+			<div id="welcomeNote" class="alert alert-info alert-dismissible" role="alert">
+  				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  				<strong>Welcome!</strong> Austin Graffiti is a place to share, explore and discuss street art in Austin. Have a look around our interactive street art map, submit some photos of your favorite pieces, or start a discussion!
+			</div>
 			<div class="submitWrap"><a href='submit.php' class="submitB">Submit New Graffiti</a></div>
 			<div id="carouselNewWrap" class="carouselWrap">
 				<h3>What's New</h3>
@@ -443,6 +447,11 @@ var currentZoom = festivalMap.getZoom();
 
 
 </script>
+<div id="footer">
+  <div class="container">
+    <p class="text-muted">Copyright ©2015 PACHA INC. </p>
+  </div>
+</div>
 
 
   </body>

@@ -152,3 +152,32 @@ text-align: center;
 #inappropriateFlag{
 	cursor: pointer;
 }
+#footer{
+	height: 60px;
+	border-top: 1px solid black;
+	font-family: 'Lato', sans-serif;
+ 	text-align: right;
+ 	margin-top:50px;
+	padding-top:20px;
+	padding-bottom:20px;
+}
+#welcomeNote{
+	font-size: 17px;
+	text-align: center;
+	background-color: white;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid black;
+	color: black;
+}
+#welcomeNote span{
+	font-size:30px;
+	margin-bottom: -10px;
+	position: relative;
+	bottom: 10px;
+}
+#welcomeNote strong{
+	font-size: 31px;
+	margin-right: 16px;
+}
