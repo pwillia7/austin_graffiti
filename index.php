@@ -125,10 +125,10 @@ var festivalMapCenter = new google.maps.LatLng(30.2500, -97.7500);
 var festivalMapZoom = 12;
 //The max and min zoom levels that are allowed.
 var festivalMapZoomMax = 20;
-var festivalMapZoomMin = 2;
+var festivalMapZoomMin = 10;
 //The boundaries of Austin
-var southWest = new google.maps.LatLng(30.219990, -97.836645);
-var northEast = new google.maps.LatLng(30.412929, -97.637861);
+var southWest = new google.maps.LatLng(29.909468, -98.179964);
+var northEast = new google.maps.LatLng(30.562375, -97.414127);
 var bounds = new google.maps.LatLngBounds(southWest,northEast);
 
 //These options configure the setup of the map. 
